@@ -21,6 +21,15 @@ class Calculator {
 
     //Todos Processos de Operações
     processOperation(operation) {
+        //Checar se current esta vazio
+        if(this.currentOperationText.innerText === "" && operation !== "C") {
+            //Outra operação
+            if(this.previousOperationText.innerText !== "") {
+                this.changeOperation(operation);
+            }
+            return;
+        }
+
         //Anotar Valores passados
         let operationValue;
         const previous = +this.previousOperationText.innerText.split(" ")[0];
@@ -28,11 +37,11 @@ class Calculator {
 
         switch(operation) {
             case "+":
-                operationValue = previous - current;
+                operationValue = previous + current;
                 this.updateScreen(operationValue, operation, current, previous);
                 break;
                 case "-":
-                operationValue = previous + current;
+                operationValue = previous - current;
                 this.updateScreen(operationValue, operation, current, previous);
                 break;
                 case "/":
@@ -42,6 +51,18 @@ class Calculator {
                 case "*":
                 operationValue = previous * current;
                 this.updateScreen(operationValue, operation, current, previous);
+                break;
+                case "DEL":
+                this.processDelOperator();
+                break;
+                case "CE":
+                this.processClearOperator();
+                break;
+                case "C":
+                this.processClearAll();
+                break;
+                case "=":
+                this.processIgual();
                 break;
             default:
                 return;
@@ -69,6 +90,37 @@ class Calculator {
             this.previousOperationText.innerText = `${operationValue} ${operation}`
             this.currentOperationText.innerText = "";
         }
+    }
+
+
+    //Outras operações Matematicas
+    changeOperation(operation) {
+
+        const mathOperation = ["*", "/", "+", "-"]
+        if(!mathOperation.includes(operation)) {
+            return;
+        }
+
+        this.previousOperationText.innerText = this.previousOperationText.innerText.slice(0, -1) + operation;
+    }
+    //Deletar o ultimo digito
+    processDelOperator() {
+        this.currentOperationText.innerText = this.currentOperationText.innerText.slice(0, -1);
+    }
+    //Limpa todos caracteres somente da tela principal
+    processClearOperator() {
+        this.currentOperationText.innerText = "";
+    }
+    //Limpa toda tela
+    processClearAll() {
+        this.currentOperationText.innerText = "";
+        this.previousOperationText.innerText = "";
+    }
+    //Resultado da tecla =
+    processIgual() {
+        const operation = previousOperationText.innerText.split(" ")[1]
+
+        this.processOperation(operation)
     }
 }
 
